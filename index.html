@@ -3,116 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - ARB Monitoring System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- Supabase SDK & Connection -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase-connect.js"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: { darGreen: '#166534', darYellow: '#ca8a04' }
-                }
-            }
-        }
-    </script>
+    <title>SPLIT Project & ARB Management System</title>
 </head>
-<body class="bg-gray-100 flex h-screen overflow-hidden">
+<body>
 
-    <!-- Sidebar Navigation -->
-    <aside class="w-64 bg-darGreen text-white flex flex-col">
-        <div class="p-6 border-b border-green-800 text-center">
-            <h1 class="text-2xl font-bold tracking-wider text-darYellow">ARB-MS</h1>
-            <p class="text-xs uppercase mt-1">Monitoring System</p>
-        </div>
+    <h1>SPLIT Project & ARB Management Dashboard</h1>
+
+    <hr>
+
+    <section id="mother-titles">
+        <h2>Mother Titles</h2>
         
-        <!-- Table-Based Menu -->
-        <div class="flex-1 p-2 overflow-y-auto">
-            <table class="w-full text-left border-collapse">
-                <tbody>
-                    <tr>
-                        <td class="p-1">
-                            <a href="index.html" class="flex items-center p-3 w-full rounded bg-green-800 transition text-white">
-                                <i class="fas fa-tachometer-alt w-6 text-center"></i> Dashboard
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="p-1">
-                            <a href="arb-profiles.html" class="flex items-center p-3 w-full rounded hover:bg-green-800 transition text-white">
-                                <i class="fas fa-users w-6 text-center"></i> ARB Profiles
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="p-1">
-                            <a href="mother-titles.html" class="flex items-center p-3 w-full rounded hover:bg-green-800 transition text-white">
-                                <i class="fas fa-map w-6 text-center"></i> Mother Titles (SPLIT)
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="p-1">
-                            <a href="reports.html" class="flex items-center p-3 w-full rounded hover:bg-green-800 transition text-white">
-                                <i class="fas fa-chart-bar w-6 text-center"></i> Reports
-                            </a>
-                        </td>
-                    </tr>
+        <h3>Add Mother Title</h3>
+        <form id="form-mother-titles">
+            <label for="mother_title_no">Mother Title No:</label>
+            <input type="text" id="mother_title_no" name="mother_title_no" required>
+            
+            <label for="landowner">Landowner:</label>
+            <input type="text" id="landowner" name="landowner">
+            
+            <label for="municipality">Municipality:</label>
+            <input type="text" id="municipality" name="municipality">
+            
+            <label for="barangay">Barangay:</label>
+            <input type="text" id="barangay" name="barangay">
+            
+            <label for="split_status">Split Status:</label>
+            <select id="split_status" name="split_status">
+                <option value="PENDING VALIDATION">PENDING VALIDATION</option>
+                <option value="VALIDATED">VALIDATED</option>
+                <option value="E-TITLE ISSUED">E-TITLE ISSUED</option>
+            </select>
+            
+            <label for="remarks">Remarks:</label>
+            <textarea id="remarks" name="remarks"></textarea>
+            
+            <button type="submit">Save Mother Title</button>
+        </form>
+
+        <h3>Mother Titles Directory</h3>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Mother Title No</th>
+                    <th>Landowner</th>
+                    <th>Municipality</th>
+                    <th>Barangay</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody id="table-mother-titles">
                 </tbody>
-            </table>
-        </div>
+        </table>
+    </section>
 
-        <div class="p-4 border-t border-green-800 text-sm text-center" id="live-clock">
-            --:--:-- --
-        </div>
-    </aside>
+    <hr>
 
-    <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-screen overflow-y-auto">
-        <header class="bg-white shadow px-8 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-gray-800">Dashboard Overview</h2>
-        </header>
-
-        <section class="p-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded shadow border-t-4 border-darGreen">
-                    <h3 class="text-gray-500 text-sm uppercase">Total ARBs Profiled</h3>
-                    <p class="text-3xl font-bold mt-2">1,204</p>
-                </div>
-                <div class="bg-white p-6 rounded shadow border-t-4 border-darYellow">
-                    <h3 class="text-gray-500 text-sm uppercase">Active ALI Cases</h3>
-                    <p class="text-3xl font-bold mt-2">45</p>
-                </div>
-                <div class="bg-white p-6 rounded shadow border-t-4 border-blue-500">
-                    <h3 class="text-gray-500 text-sm uppercase">Mother Titles Validated</h3>
-                    <p class="text-3xl font-bold mt-2">89</p>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <script>
-        function updateClock() {
-            const now = new Date();
-            let hours = now.getHours();
-            let minutes = now.getMinutes();
-            let seconds = now.getSeconds();
-            const ampm = hours >= 12 ? 'PM' : 'AM';
+    <section id="arb-profiles">
+        <h2>ARB Profiles</h2>
+        
+        <h3>Add ARB Profile</h3>
+        <form id="form-arb-profiles">
+            <label for="arb_id">ARB ID:</label>
+            <input type="text" id="arb_id" name="arb_id">
             
-            hours = hours % 12;
-            hours = hours ? hours : 12;
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            seconds = seconds < 10 ? '0' + seconds : seconds;
+            <label for="fb_name">FB Name:</label>
+            <input type="text" id="fb_name" name="fb_name" required>
             
-            const strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
-            document.getElementById('live-clock').innerText = strTime;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
+            <label for="fb_gender">FB Gender:</label>
+            <input type="text" id="fb_gender" name="fb_gender">
+            
+            <label for="spouse">Spouse:</label>
+            <input type="text" id="spouse" name="spouse">
+            
+            <label for="clorurban">Clorurban:</label>
+            <input type="text" id="clorurban" name="clorurban">
+            
+            <label for="sequence_no">Sequence No:</label>
+            <input type="text" id="sequence_no" name="sequence_no">
+            
+            <button type="submit">Save ARB Profile</button>
+        </form>
+
+        <h3>ARB Profiles Directory</h3>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ARB ID</th>
+                    <th>FB Name</th>
+                    <th>Gender</th>
+                    <th>Spouse</th>
+                    <th>Clorurban</th>
+                    <th>Sequence No</th>
+                </tr>
+            </thead>
+            <tbody id="table-arb-profiles">
+                </tbody>
+        </table>
+    </section>
+
+    <hr>
+
+    <section id="land-holdings">
+        <h2>Land Holdings</h2>
+        
+        <h3>Add Land Holding</h3>
+        <form id="form-land-holdings">
+            <label for="arb_profile_id">ARB Profile ID (Reference):</label>
+            <input type="text" id="arb_profile_id" name="arb_profile_id" required>
+            
+            <label for="mother_title_id">Mother Title ID (Reference):</label>
+            <input type="text" id="mother_title_id" name="mother_title_id">
+
+            <label for="cocrom_certificate_no">COCROM Certificate No:</label>
+            <input type="text" id="cocrom_certificate_no" name="cocrom_certificate_no">
+            
+            <label for="claim_no">Claim No:</label>
+            <input type="text" id="claim_no" name="claim_no">
+            
+            <label for="source">Source:</label>
+            <input type="text" id="source" name="source">
+            
+            <label for="lhid">LHID:</label>
+            <input type="text" id="lhid" name="lhid">
+            
+            <label for="mode_of_acquisition">Mode of Acquisition:</label>
+            <input type="text" id="mode_of_acquisition" name="mode_of_acquisition">
+
+            <label for="survey_no">Survey No:</label>
+            <input type="text" id="survey_no" name="survey_no">
+            
+            <label for="lot_no">Lot No:</label>
+            <input type="text" id="lot_no" name="lot_no">
+            
+            <label for="area">Area:</label>
+            <input type="number" step="0.0001" id="area" name="area">
+            
+            <label for="estimate_share">Estimate Share:</label>
+            <input type="text" id="estimate_share" name="estimate_share">
+            
+            <label for="crops">Crops:</label>
+            <input type="text" id="crops" name="crops">
+            
+            <label for="irrigated">Irrigated:</label>
+            <input type="checkbox" id="irrigated" name="irrigated" value="true">
+            
+            <label for="irrigable">Irrigable:</label>
+            <input type="checkbox" id="irrigable" name="irrigable" value="true">
+
+            <label for="type_of_title">Type of Title:</label>
+            <input type="text" id="type_of_title" name="type_of_title">
+            
+            <label for="ccloa_title">CCLOA Title:</label>
+            <input type="text" id="ccloa_title" name="ccloa_title">
+            
+            <label for="ep_cloa_serial_number">EP/CLOA Serial Number:</label>
+            <input type="text" id="ep_cloa_serial_number" name="ep_cloa_serial_number">
+            
+            <label for="epeb_number">EPEB Number:</label>
+            <input type="text" id="epeb_number" name="epeb_number">
+            
+            <label for="title_number">Title Number:</label>
+            <input type="text" id="title_number" name="title_number">
+
+            <label for="date_generated">Date Generated:</label>
+            <input type="date" id="date_generated" name="date_generated">
+            
+            <label for="date_registered">Date Registered:</label>
+            <input type="date" id="date_registered" name="date_registered">
+            
+            <label for="date_released">Date Released:</label>
+            <input type="date" id="date_released" name="date_released">
+            
+            <label for="date_distributed">Date Distributed:</label>
+            <input type="date" id="date_distributed" name="date_distributed">
+            
+            <button type="submit">Save Land Holding</button>
+        </form>
+
+        <h3>Land Holdings Directory</h3>
+        <table border="1" style="width:100%; text-align:left;">
+            <thead>
+                <tr>
+                    <th>ARB Profile</th>
+                    <th>Mother Title</th>
+                    <th>Lot No</th>
+                    <th>Area</th>
+                    <th>Title Number</th>
+                    <th>Date Distributed</th>
+                </tr>
+            </thead>
+            <tbody id="table-land-holdings">
+                </tbody>
+        </table>
+    </section>
+
+    <hr>
+
+    <section id="arb-tags">
+        <h2>ARB Tags / ALI Cases</h2>
+        
+        <h3>Add Tag</h3>
+        <form id="form-arb-tags">
+            <label for="tag_arb_profile_id">ARB Profile ID (Reference):</label>
+            <input type="text" id="tag_arb_profile_id" name="arb_profile_id" required>
+            
+            <label for="tag_type">Tag Type:</label>
+            <select id="tag_type" name="tag_type" required>
+                <option value="ALI CASE">ALI CASE</option>
+                <option value="FOR EXCLUSION">FOR EXCLUSION</option>
+                <option value="FOR INCLUSION">FOR INCLUSION</option>
+            </select>
+            
+            <label for="status">Status:</label>
+            <select id="status" name="status" required>
+                <option value="PENDING">PENDING</option>
+                <option value="UNDER REVIEW">UNDER REVIEW</option>
+                <option value="RESOLVED">RESOLVED</option>
+            </select>
+            
+            <label for="case_details">Case Details:</label>
+            <textarea id="case_details" name="case_details"></textarea>
+            
+            <label for="tagged_by">Tagged By:</label>
+            <input type="text" id="tagged_by" name="tagged_by">
+            
+            <button type="submit">Save Tag</button>
+        </form>
+
+        <h3>ARB Tags Directory</h3>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ARB Profile ID</th>
+                    <th>Tag Type</th>
+                    <th>Status</th>
+                    <th>Case Details</th>
+                    <th>Tagged By</th>
+                </tr>
+            </thead>
+            <tbody id="table-arb-tags">
+                </tbody>
+        </table>
+    </section>
+
 </body>
 </html>
