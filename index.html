@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ARB Monitoring System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Supabase SDK & Connection -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-connect.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { darGreen: '#166534', darYellow: '#ca8a04' }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 flex h-screen overflow-hidden">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-darGreen text-white flex flex-col">
+        <div class="p-6 border-b border-green-800 text-center">
+            <h1 class="text-2xl font-bold tracking-wider text-darYellow">ARB-MS</h1>
+            <p class="text-xs uppercase mt-1">Monitoring System</p>
+        </div>
+        
+        <!-- Table-Based Menu -->
+        <div class="flex-1 p-2 overflow-y-auto">
+            <table class="w-full text-left border-collapse">
+                <tbody>
+                    <tr>
+                        <td class="p-1">
+                            <a href="index.html" class="flex items-center p-3 w-full rounded bg-green-800 transition text-white">
+                                <i class="fas fa-tachometer-alt w-6 text-center"></i> Dashboard
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="p-1">
+                            <a href="arb-profiles.html" class="flex items-center p-3 w-full rounded hover:bg-green-800 transition text-white">
+                                <i class="fas fa-users w-6 text-center"></i> ARB Profiles
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="p-1">
+                            <a href="mother-titles.html" class="flex items-center p-3 w-full rounded hover:bg-green-800 transition text-white">
+                                <i class="fas fa-map w-6 text-center"></i> Mother Titles (SPLIT)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="p-1">
+                            <a href="reports.html" class="flex items-center p-3 w-full rounded hover:bg-green-800 transition text-white">
+                                <i class="fas fa-chart-bar w-6 text-center"></i> Reports
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="p-4 border-t border-green-800 text-sm text-center" id="live-clock">
+            --:--:-- --
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-screen overflow-y-auto">
+        <header class="bg-white shadow px-8 py-4 flex justify-between items-center">
+            <h2 class="text-xl font-semibold text-gray-800">Dashboard Overview</h2>
+        </header>
+
+        <section class="p-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded shadow border-t-4 border-darGreen">
+                    <h3 class="text-gray-500 text-sm uppercase">Total ARBs Profiled</h3>
+                    <p class="text-3xl font-bold mt-2">1,204</p>
+                </div>
+                <div class="bg-white p-6 rounded shadow border-t-4 border-darYellow">
+                    <h3 class="text-gray-500 text-sm uppercase">Active ALI Cases</h3>
+                    <p class="text-3xl font-bold mt-2">45</p>
+                </div>
+                <div class="bg-white p-6 rounded shadow border-t-4 border-blue-500">
+                    <h3 class="text-gray-500 text-sm uppercase">Mother Titles Validated</h3>
+                    <p class="text-3xl font-bold mt-2">89</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            
+            const strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+            document.getElementById('live-clock').innerText = strTime;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
